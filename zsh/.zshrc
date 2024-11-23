@@ -39,8 +39,6 @@ alias cdPgw="cd ~/Programming/Git/Web"
 alias cdPg="cd ~/Programming/Git"
 alias cdpl="cd ~/Programming/Locale"
 alias ls="ls -la --color"
-alias yabaiInstall="sudo yabai --install-sa"
-alias yabaiLoad="sudo yabai --load-sa"
 alias cl="clear"
 
 source ~/.powerlevel10k/powerlevel10k.zsh-theme

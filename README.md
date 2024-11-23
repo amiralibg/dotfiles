@@ -11,7 +11,3 @@ git clone https://github.com/amiralibg/dotfiles.git ~/dotfiles
 ```bash
 cd ~/dotfiles
 ```
-
-### License
-
-MIT

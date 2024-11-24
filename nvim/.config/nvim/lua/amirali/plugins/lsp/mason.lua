@@ -40,7 +40,6 @@ return {
 				"glint",
 				"gopls",
 				"jsonls",
-        "handlebars",
 			},
 		})
 

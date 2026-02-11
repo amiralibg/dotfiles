@@ -38,7 +38,6 @@ return {
 				"prismals",
 				"pyright",
 				"glint",
-				"gopls",
 				"jsonls",
 			},
 		})
@@ -49,8 +48,9 @@ return {
 				"stylua", -- lua formatter
 				"isort", -- python formatter
 				"black", -- python formatter
-				"pylint",
-				"eslint_d",
+				"pylint", -- python linter
+				"eslint_d", -- js/ts linter
+				"js-debug-adapter", -- javascript/typescript debugger
 			},
 		})
 	end,

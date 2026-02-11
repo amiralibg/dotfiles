@@ -19,6 +19,8 @@ export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
 # Flutter Path
 export PATH="$PATH:/Users/amiralibg/Development/flutter/bin"
 
+export PATH=/Users/amiralibg/.local/bin:$PATH
+
 #Zsh Config
 ZSH_THEME="avit"
 HISTFILE=~/.zsh_history
@@ -58,4 +60,20 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-PATH=~/.console-ninja/.bin:$PATH
+
+
+# Added by Windsurf
+export PATH="/Users/amiralibg/.codeium/windsurf/bin:$PATH"
+export GEMINI_API_KEY="AIzaSyCiiKe_dAk4oB1QWH0OV46nwKR93DjLrF0"
+export GOOGLE_CLOUD_PROJECT="AIzaSyAzD7VaQkkqgE44aaCCey-E2nxVPE2QwpQ"
+
+# pnpm
+export PNPM_HOME="/Users/amiralibg/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# Added by Antigravity
+export PATH="/Users/amiralibg/.antigravity/antigravity/bin:$PATH"

@@ -10,6 +10,7 @@ My personal dotfiles for macOS, managed with Git and symlinks.
 | `alacritty` | `~/.config/alacritty`         | Alacritty terminal       |
 | `borders`   | `~/.config/borders`           | JankyBorders utility     |
 | `firefox`   | `~/Library/...`               | Firefox userChrome & Sidebery layout |
+| `ghostty`   | `~/.config/ghostty`           | Ghostty terminal                     |
 | `kitty`     | `~/.config/kitty`             | Kitty terminal           |
 | `nvim`      | `~/.config/nvim`              | Neovim (lazy.nvim)       |
 | `skhd`      | `~/.config/skhd`              | skhd hotkey daemon       |
@@ -28,7 +29,7 @@ by Git.
 Clone the repo and run the setup script — it will create all symlinks for you:
 
 ```bash
-git clone https://github.com/amiralibg/dotfiles.git ~/dotfiles
+git clone --recurse-submodules https://github.com/amiralibg/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 chmod +x setup.sh
 ./setup.sh
@@ -39,7 +40,7 @@ chmod +x setup.sh
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/amiralibg/dotfiles.git ~/dotfiles
+git clone --recurse-submodules https://github.com/amiralibg/dotfiles.git ~/dotfiles
 ```
 
 ### 2. Create config directory if it doesn't exist
@@ -59,6 +60,9 @@ ln -sf ~/dotfiles/alacritty/.config/alacritty ~/.config/alacritty
 
 # Borders
 ln -sf ~/dotfiles/borders/.config/borders ~/.config/borders
+
+# Ghostty
+ln -sf ~/dotfiles/ghostty/.config/ghostty ~/.config/ghostty
 
 # Kitty
 ln -sf ~/dotfiles/kitty/.config/kitty ~/.config/kitty

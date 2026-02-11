@@ -38,6 +38,10 @@ echo "======================================"
 # Ensure dotfiles dir exists
 [ -d "$DOTFILES" ] || error "Dotfiles directory not found at $DOTFILES. Clone the repo first."
 
+# Initialize submodules (e.g. kitty-themes)
+info "Initializing git submodules..."
+git -C "$DOTFILES" submodule update --init --recursive
+
 # Ensure ~/.config exists
 mkdir -p "$CONFIG"
 
@@ -47,6 +51,7 @@ link "$DOTFILES/alacritty/.config/alacritty"  "$CONFIG/alacritty"
 link "$DOTFILES/borders/.config/borders"       "$CONFIG/borders"
 link "$DOTFILES/kitty/.config/kitty"           "$CONFIG/kitty"
 link "$DOTFILES/nvim/.config/nvim"             "$CONFIG/nvim"
+link "$DOTFILES/ghostty/.config/ghostty"       "$CONFIG/ghostty"
 link "$DOTFILES/skhd/.config/skhd"            "$CONFIG/skhd"
 
 # ── Home directory symlinks ───────────────────────────────────────────────────

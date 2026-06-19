@@ -1,7 +1,7 @@
 after-login-command = []
 
 after-startup-command = [
-  'exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0'
+  'exec-and-forget borders active_color=0xffc098ff inactive_color=0xff494d64 width=5.0'
 ]
 
 exec-on-workspace-change = []
@@ -191,9 +191,16 @@ if.app-id = 'com.wireguard.macos'
 run = "layout floating"
 
 [[on-window-detected]]
+if.app-id = 'su.ffg.happ'
+run = "layout floating"
+
+[[on-window-detected]]
 if.app-id = 'com.wireguard.macos'
 run = "move-node-to-workspace 1"
 
+[[on-window-detected]]
+if.app-id = 'su.ffg.happ'
+run = "move-node-to-workspace 1"
 
 [[on-window-detected]]
 if.app-id = 'com.cisco.secureclient.gui'
@@ -228,6 +235,14 @@ if.app-id = 'com.microsoft.VSCode'
 run = "move-node-to-workspace C"
 
 [[on-window-detected]]
+if.app-id = 'dev.zed.Zed'
+run = "move-node-to-workspace C"
+
+[[on-window-detected]]
+if.app-id = 'net.imput.helium'
+run = "move-node-to-workspace C"
+
+[[on-window-detected]]
 if.app-id = 'com.brave.browser'
 run = "move-node-to-workspace B"
 
@@ -246,6 +261,10 @@ if.app-id = 'com.hnc.Discord'
 run = "move-node-to-workspace D"
 
 [[on-window-detected]]
+if.app-id = 'Mattermost.Desktop'
+run = "move-node-to-workspace D"
+
+[[on-window-detected]]
 if.app-id = 'com.figma.Desktop'
 run = "move-node-to-workspace O"
 
@@ -253,3 +272,10 @@ run = "move-node-to-workspace O"
 if.app-id = 'com.openai.chat'
 run = "move-node-to-workspace G"
 
+[[on-window-detected]]
+if.app-id = 'com.t3tools.t3code'
+run = "move-node-to-workspace G"
+
+[[on-window-detected]]
+if.app-id = 'com.anthropic.claudefordesktop'
+run = "move-node-to-workspace G"

@@ -39,8 +39,8 @@ return {
 		},
 		{ "<leader>lc", "<Plug>(vimtex-clean)", desc = "VimTeX Clean" },
 		{ "<leader>lC", "<Plug>(vimtex-clean-full)", desc = "VimTeX Clean Full" },
-		{ "<leader>lg", "<Plug>(vimtex-status)", desc = "VimTeX Status" },
-		{ "<leader>lG", "<Plug>(vimtex-status-all)", desc = "VimTeX Status All" },
+		{ "<leader>lgs", "<Plug>(vimtex-status)", desc = "VimTeX Status" },
+		{ "<leader>lgS", "<Plug>(vimtex-status-all)", desc = "VimTeX Status All" },
 
 		-- View
 		{ "<leader>lv", "<Plug>(vimtex-view)", desc = "VimTeX View" },

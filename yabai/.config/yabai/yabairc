@@ -16,7 +16,7 @@ sudo yabai --load-sa
 # external_bar reserves room at the top for sketchybar (height 37).
 # ─────────────────────────────────────────────────────────────────────────────
 yabai -m config layout                bsp
-yabai -m config external_bar          all:40:0
+yabai -m config external_bar          all:34:0
 yabai -m config top_padding           8
 yabai -m config bottom_padding        8
 yabai -m config left_padding          8
@@ -44,28 +44,40 @@ yabai -m config mouse_drop_action     swap
 yabai -m config window_shadow         on
 yabai -m config window_opacity        off
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Spaces — label the Desktops that exist, in PRIORITY order (named first).
+# ═════════════════════════════════════════════════════════════════════════════
+# Spaces — ★ YOU NAME YOUR DESKTOPS HERE ★
 #
-#  ⚠️  macOS 26.x: `yabai -m space --create` is BROKEN (scripting-addition
-#      error), so we do NOT create spaces here. Create extra Desktops manually
-#      in Mission Control, then `yabai --restart-service` to label them.
+# The Nth name below labels the Nth macOS Desktop, counted LEFT→RIGHT across
+# Mission Control (display 1's Desktops first, then display 2's). Reorder the
+# names to change WHICH Desktop is which — the skhd key for each name (right
+# column) is fixed, so the key always follows its name to whatever Desktop holds
+# it. The keys live in skhd (skhdrc); the sketchybar pill tag lives in
+# items/spaces.sh → `space_tag`.  To add a brand-new space, add a name here AND
+# a key in skhdrc AND a tag in space_tag.
 #
-#  Order below means: with N Desktops you get the first N labels. Keys focus by
-#  LABEL, so a key just no-ops until its Desktop exists.
+# After editing this list — or after adding/removing a Desktop in Mission
+# Control — run:   yabai --restart-service
+# (it relabels every Desktop by this order and re-applies the app rules below).
 #
-#   label    key      holds
-#   ───────  ───────  ──────────────────────────────────────────────
-#   main     alt-1    WireGuard, Happ, Cisco, Telegram (comms)
-#   term     alt-i    Alacritty, Warp, kitty, Ghostty
-#   code     alt-c    VS Code (+ Insiders), Zed, Helium
-#   web      alt-b    Brave, Zen
-#   chat     alt-d    Discord, Mattermost
-#   ai       alt-g    ChatGPT, T3 Code, Claude
-#   design   alt-o    Figma
-#   two..nine alt-2/3/5/6/7/8/9   scratch
-# ─────────────────────────────────────────────────────────────────────────────
-SPACE_LABELS=(main term code web chat ai design two three five six seven eight nine)
+#  ⚠️  macOS 26.x can't make Desktops from the CLI (`space --create` errors),
+#      so add them in Mission Control first, then restart yabai.
+# ═════════════════════════════════════════════════════════════════════════════
+SPACE_LABELS=(
+  main     # Desktop 1   → alt-1   (WireGuard, Happ, Cisco, Telegram)
+  term     # Desktop 2   → alt-i   (Alacritty, Warp, kitty, Ghostty)
+  code     # Desktop 3   → alt-c   (VS Code, Zed, Helium)
+  web      # Desktop 4   → alt-b   (Brave, Zen)
+  chat     # Desktop 5   → alt-d   (Discord, Mattermost)
+  ai       # Desktop 6   → alt-g   (ChatGPT, T3 Code, Claude)
+  design   # Desktop 7   → alt-o   (Figma)
+  two      # Desktop 8   → alt-2
+  three    # Desktop 9   → alt-3
+  five     # Desktop 10  → alt-5
+  six      # Desktop 11  → alt-6
+  seven    # Desktop 12  → alt-7
+  eight    # Desktop 13  → alt-8
+  nine     # Desktop 14  → alt-9
+)
 
 space_count=$(yabai -m query --spaces | jq 'length')
 # pass 1: temp labels (avoids "label already registered" on re-runs)
@@ -128,6 +140,7 @@ yabai -m rule --add app="^qBittorrent$"          manage=off
 yabai -m rule --add app="^Simulator$"            manage=off
 yabai -m rule --add app="^System Settings$"      manage=off
 yabai -m rule --add app="^Archive Utility$"      manage=off
+yabai -m rule --add app="^Happ$"      manage=off
 # Brave Picture-in-Picture window → float
 yabai -m rule --add app="^Brave Browser$" title=".*Picture.in.Picture.*" manage=off
 

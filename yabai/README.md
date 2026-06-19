@@ -54,43 +54,62 @@ manually in Mission Control (see below), and yabai just labels whatever exists.
 
 ---
 
-## Spaces — how the named workspaces work
+## Spaces — naming your Desktops (you control this)
 
 yabai uses real macOS Desktops (numeric), so AeroSpace's *named* workspaces are
-recreated as **labels** on Desktops. `yabairc` labels the Desktops that exist,
-in **priority order** (most-used first), so the important ones work even with few
-Desktops. Keys focus **by label**, so a key simply no-ops until its Desktop
-exists.
+recreated as **labels** on Desktops. Keys focus **by label** (`alt-b` → `web`),
+so a key follows its name to whatever Desktop currently holds it.
 
-Priority order → label → key → apps:
+**The single source of truth is the `SPACE_LABELS` list in `yabairc`.** The Nth
+name labels the Nth macOS Desktop, counted **left → right** across Mission
+Control (display 1's Desktops first, then display 2's):
 
-| label | key | apps assigned by rule |
-|---|---|---|
-| `main` | `alt-1` | WireGuard, Happ, Cisco Secure Client, Telegram |
-| `term` | `alt-i` | Alacritty, Warp, kitty, Ghostty |
-| `code` | `alt-c` | VS Code, VS Code Insiders, Zed, Helium |
-| `web` | `alt-b` | Brave, Zen |
-| `chat` | `alt-d` | Discord, Mattermost |
-| `ai` | `alt-g` | ChatGPT, T3 Code, Claude |
-| `design` | `alt-o` | Figma |
-| `two`,`three`,`five`…`nine` | `alt-2/3/5/6/7/8/9` | scratch |
+```bash
+SPACE_LABELS=(
+  main     # Desktop 1   → alt-1
+  term     # Desktop 2   → alt-i
+  code     # Desktop 3   → alt-c
+  web      # Desktop 4   → alt-b
+  chat     # Desktop 5   → alt-d
+  ai       # Desktop 6   → alt-g
+  design   # Desktop 7   → alt-o
+  …
+)
+```
 
-With your current **6 Desktops** you get: `main, term, code, web, chat, ai`.
-`design` and the scratch numbers need more Desktops.
+### To rename / reorder which Desktop is which
 
-### Adding more Desktops (one-time, manual on macOS 26)
+1. Edit the order of names in `SPACE_LABELS` (in `yabairc`).
+2. `yabai --restart-service` — it relabels every Desktop by this order and
+   re-applies the app rules.
 
-1. Open **Mission Control** (swipe up with 3–4 fingers, or `Ctrl + ↑`).
-2. Hover the row of Desktops at the top → click the **`＋`** to add one. Repeat
-   until you have as many as you want (e.g. 14 for the full set). Add them on the
-   **same display** you want the named spaces on.
-3. Back in a terminal: `yabai --restart-service` — yabai relabels in priority
-   order and re-applies the app rules.
+The key for each name is fixed in `skhdrc` (e.g. `alt - b : … --focus web`), and
+the sketchybar pill tag is in `items/spaces.sh` → `space_tag`. So **reordering
+the list is all you need** to change which Desktop is `web`, `code`, etc.
 
-> Multi-monitor note: new Desktops land on whichever display is active. Labels
-> follow global Desktop index (display 1's Desktops first, then display 2's). To
-> move a Desktop between monitors, drag it in Mission Control, then
-> `yabai --restart-service`.
+### To add a brand-new named space (e.g. `music` on `alt-m`)
+
+1. Add `music` to `SPACE_LABELS` at the Desktop position you want.
+2. In `skhdrc` add:   `alt - m : yabai -m space --focus music`   and
+   `alt + shift - m : yabai -m window --space music`.
+3. (optional) In `items/spaces.sh` → `space_tag`, add `music) echo "M" ;;` for
+   the bar pill.
+4. Create the Desktop in Mission Control if needed, then `yabai --restart-service`.
+
+### Adding Desktops (manual on macOS 26)
+
+`space --create` is broken on macOS 26.x, so add Desktops in **Mission Control**
+(`Ctrl + ↑` → hover the Desktop row → **`＋`**), then `yabai --restart-service`.
+
+> ⚠️ **Why names "scramble" when you insert a Desktop:** labels are assigned by
+> position. If you add a Desktop *in the middle*, every Desktop after it shifts
+> by one, so the names land on different Desktops. Fixes: add Desktops at the
+> **end**, or just reorder `SPACE_LABELS` to match and restart yabai. A restart
+> always re-enforces the list, so you can't get permanently stuck — one
+> `yabai --restart-service` re-applies clean names.
+
+> Multi-monitor note: new Desktops land on whichever display is active. To move a
+> Desktop between monitors, drag it in Mission Control, then restart yabai.
 
 ---
 

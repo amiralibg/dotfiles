@@ -13,10 +13,11 @@ sudo yabai --load-sa
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Global layout & gaps  (matches AeroSpace inner/outer gaps = 8)
-# external_bar reserves room at the top for sketchybar (height 37).
 # ─────────────────────────────────────────────────────────────────────────────
 yabai -m config layout                bsp
-yabai -m config external_bar          all:34:0
+# sketchybar disabled — no reserved top gap (using the native menu-bar app).
+# Re-enable by uncommenting this (and the sketchybar lines below).
+# yabai -m config external_bar          all:34:0
 yabai -m config top_padding           8
 yabai -m config bottom_padding        8
 yabai -m config left_padding          8
@@ -150,14 +151,14 @@ yabai -m rule --add app="^Brave Browser$" title=".*Picture.in.Picture.*" manage=
 yabai -m rule --apply
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Signals — keep sketchybar in sync with yabai
+# Signals — keep sketchybar in sync with yabai  (DISABLED: sketchybar is off)
 # ─────────────────────────────────────────────────────────────────────────────
-yabai -m signal --add event=space_changed             action="sketchybar --trigger space_change --trigger space_windows"
-yabai -m signal --add event=display_changed            action="sketchybar --trigger space_change --trigger space_windows"
-yabai -m signal --add event=window_created             action="sketchybar --trigger space_windows"
-yabai -m signal --add event=window_destroyed           action="sketchybar --trigger space_windows"
-yabai -m signal --add event=window_focused             action="sketchybar --trigger space_windows"
-yabai -m signal --add event=application_front_switched action="sketchybar --trigger space_windows"
+# yabai -m signal --add event=space_changed             action="sketchybar --trigger space_change --trigger space_windows"
+# yabai -m signal --add event=display_changed            action="sketchybar --trigger space_change --trigger space_windows"
+# yabai -m signal --add event=window_created             action="sketchybar --trigger space_windows"
+# yabai -m signal --add event=window_destroyed           action="sketchybar --trigger space_windows"
+# yabai -m signal --add event=window_focused             action="sketchybar --trigger space_windows"
+# yabai -m signal --add event=application_front_switched action="sketchybar --trigger space_windows"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # JankyBorders — launch with your ~/.config/borders/bordersrc styling
@@ -166,9 +167,8 @@ killall borders &>/dev/null
 "$HOME/.config/borders/bordersrc" &
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Reload sketchybar (if running) so its space pills rebuild with the labels set
-# above — this is why `yabai --restart-service` now refreshes the bar too.
+# Reload sketchybar on restart (DISABLED: sketchybar is off).
 # ─────────────────────────────────────────────────────────────────────────────
-pgrep -qx sketchybar && sketchybar --reload >/dev/null 2>&1
+# pgrep -qx sketchybar && sketchybar --reload >/dev/null 2>&1
 
 echo "yabai config loaded."

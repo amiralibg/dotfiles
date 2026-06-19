@@ -45,6 +45,45 @@ git -C "$DOTFILES" submodule update --init --recursive
 # Ensure ~/.config exists
 mkdir -p "$CONFIG"
 
+# ── Zsh dependencies ────────────────────────────────────────────────────────
+# Powerlevel10k
+if [ ! -d "$HOME/.powerlevel10k" ]; then
+  info "Cloning powerlevel10k..."
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$HOME/.powerlevel10k"
+else
+  warn "powerlevel10k already installed — skipping"
+fi
+
+# zsh-autosuggestions (oh-my-zsh plugin)
+ZSH_AUTOSUGGESTIONS="$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+if [ ! -d "$ZSH_AUTOSUGGESTIONS" ]; then
+  info "Cloning zsh-autosuggestions..."
+  git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_AUTOSUGGESTIONS"
+else
+  warn "zsh-autosuggestions already installed — skipping"
+fi
+
+# zsh-syntax-highlighting (via Homebrew)
+if ! brew list zsh-syntax-highlighting &>/dev/null; then
+  info "Installing zsh-syntax-highlighting via Homebrew..."
+  brew install zsh-syntax-highlighting
+else
+  warn "zsh-syntax-highlighting already installed — skipping"
+fi
+
+# ── Window manager (yabai + skhd + JankyBorders + sketchybar) ─────────────────
+for pkg in koekeishiya/formulae/yabai koekeishiya/formulae/skhd \
+           FelixKratz/formulae/borders FelixKratz/formulae/sketchybar \
+           font-symbols-only-nerd-font; do
+  name="${pkg##*/}"
+  if ! brew list "$name" &>/dev/null; then
+    info "Installing $name via Homebrew..."
+    brew install "$pkg"
+  else
+    warn "$name already installed — skipping"
+  fi
+done
+
 # ── .config symlinks ──────────────────────────────────────────────────────────
 link "$DOTFILES/aerospace/.config/aerospace"  "$CONFIG/aerospace"
 link "$DOTFILES/alacritty/.config/alacritty"  "$CONFIG/alacritty"
@@ -53,6 +92,8 @@ link "$DOTFILES/kitty/.config/kitty"           "$CONFIG/kitty"
 link "$DOTFILES/nvim/.config/nvim"             "$CONFIG/nvim"
 link "$DOTFILES/ghostty/.config/ghostty"       "$CONFIG/ghostty"
 link "$DOTFILES/skhd/.config/skhd"            "$CONFIG/skhd"
+link "$DOTFILES/yabai/.config/yabai"           "$CONFIG/yabai"
+link "$DOTFILES/sketchybar/.config/sketchybar" "$CONFIG/sketchybar"
 
 # ── Home directory symlinks ───────────────────────────────────────────────────
 link "$DOTFILES/tmux/.tmux.conf"  "$HOME/.tmux.conf"

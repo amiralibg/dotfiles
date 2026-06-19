@@ -1,0 +1,152 @@
+#!/usr/bin/env bash
+
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ yabai — tiling window manager                                            │
+# │ Mirrors the AeroSpace / Glide setup. See README.md for the full guide.   │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Scripting addition (needs SIP partially disabled — see README.md)
+# ─────────────────────────────────────────────────────────────────────────────
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+sudo yabai --load-sa
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Global layout & gaps  (matches AeroSpace inner/outer gaps = 8)
+# external_bar reserves room at the top for sketchybar (height 37).
+# ─────────────────────────────────────────────────────────────────────────────
+yabai -m config layout                bsp
+yabai -m config external_bar          all:37:0
+yabai -m config top_padding           8
+yabai -m config bottom_padding        8
+yabai -m config left_padding          8
+yabai -m config right_padding         8
+yabai -m config window_gap            8
+
+yabai -m config window_placement      second_child
+yabai -m config split_ratio           0.50
+yabai -m config auto_balance          off
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Mouse  (AeroSpace did mouse-follows-focus, not focus-follows-mouse)
+# alt + drag to move, alt + right-drag to resize.
+# ─────────────────────────────────────────────────────────────────────────────
+yabai -m config mouse_follows_focus   on
+yabai -m config focus_follows_mouse   off
+yabai -m config mouse_modifier        alt
+yabai -m config mouse_action1         move
+yabai -m config mouse_action2         resize
+yabai -m config mouse_drop_action     swap
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Appearance
+# ─────────────────────────────────────────────────────────────────────────────
+yabai -m config window_shadow         on
+yabai -m config window_opacity        off
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Spaces — label the Desktops that exist, in PRIORITY order (named first).
+#
+#  ⚠️  macOS 26.x: `yabai -m space --create` is BROKEN (scripting-addition
+#      error), so we do NOT create spaces here. Create extra Desktops manually
+#      in Mission Control, then `yabai --restart-service` to label them.
+#
+#  Order below means: with N Desktops you get the first N labels. Keys focus by
+#  LABEL, so a key just no-ops until its Desktop exists.
+#
+#   label    key      holds
+#   ───────  ───────  ──────────────────────────────────────────────
+#   main     alt-1    WireGuard, Happ, Cisco, Telegram (comms)
+#   term     alt-i    Alacritty, Warp, kitty, Ghostty
+#   code     alt-c    VS Code (+ Insiders), Zed, Helium
+#   web      alt-b    Brave, Zen
+#   chat     alt-d    Discord, Mattermost
+#   ai       alt-g    ChatGPT, T3 Code, Claude
+#   design   alt-o    Figma
+#   two..nine alt-2/3/5/6/7/8/9   scratch
+# ─────────────────────────────────────────────────────────────────────────────
+SPACE_LABELS=(main term code web chat ai design two three five six seven eight nine)
+
+space_count=$(yabai -m query --spaces | jq 'length')
+# pass 1: temp labels (avoids "label already registered" on re-runs)
+i=1; for _ in "${SPACE_LABELS[@]}"; do
+  [ "$i" -le "$space_count" ] && yabai -m space "$i" --label "tmp$i" 2>/dev/null
+  i=$((i + 1))
+done
+# pass 2: real labels
+i=1; for label in "${SPACE_LABELS[@]}"; do
+  [ "$i" -le "$space_count" ] && yabai -m space "$i" --label "$label" 2>/dev/null
+  i=$((i + 1))
+done
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Per-app space assignment  (mirrors AeroSpace `move-node-to-workspace`)
+# Match is on the app's *display name* (regex). Verify names with:
+#   yabai -m query --windows | jq -r '.[].app' | sort -u
+# ─────────────────────────────────────────────────────────────────────────────
+# comms → main (WireGuard/Happ also float, like AeroSpace)
+yabai -m rule --add app="^WireGuard$"            space=main manage=off
+yabai -m rule --add app="^Happ$"                 space=main manage=off
+yabai -m rule --add app="^Cisco Secure Client$"  space=main
+yabai -m rule --add app="^Telegram$"             space=main
+
+# terminals → term
+yabai -m rule --add app="^Alacritty$"            space=term
+yabai -m rule --add app="^Warp$"                 space=term
+yabai -m rule --add app="^kitty$"                space=term
+yabai -m rule --add app="^Ghostty$"              space=term
+
+# editors → code
+yabai -m rule --add app="^Code$"                 space=code
+yabai -m rule --add app="^Code - Insiders$"      space=code
+yabai -m rule --add app="^Zed$"                  space=code
+yabai -m rule --add app="^Helium$"               space=code
+
+# browsers → web
+yabai -m rule --add app="^Brave Browser$"        space=web
+yabai -m rule --add app="^Zen$"                  space=web
+
+# chat → chat
+yabai -m rule --add app="^Discord$"              space=chat
+yabai -m rule --add app="^Mattermost$"           space=chat
+
+# ai → ai  (real names: "Claude", "T3 Code (Alpha)" → matched by prefix)
+yabai -m rule --add app="^ChatGPT$"              space=ai
+yabai -m rule --add app="^T3 Code"               space=ai
+yabai -m rule --add app="^Claude$"               space=ai
+
+# design → design
+yabai -m rule --add app="^Figma$"                space=design
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Always-floating / unmanaged apps  (mirrors AeroSpace `layout floating`)
+# ─────────────────────────────────────────────────────────────────────────────
+yabai -m rule --add app="^Finder$"               manage=off
+yabai -m rule --add app="^Qv2ray$"               manage=off
+yabai -m rule --add app="^Hiddify$"              manage=off
+yabai -m rule --add app="^qBittorrent$"          manage=off
+yabai -m rule --add app="^Simulator$"            manage=off
+yabai -m rule --add app="^System Settings$"      manage=off
+yabai -m rule --add app="^Archive Utility$"      manage=off
+# Brave Picture-in-Picture window → float
+yabai -m rule --add app="^Brave Browser$" title=".*Picture.in.Picture.*" manage=off
+
+# Apply the rules above to windows that are ALREADY open (e.g. on reload), now
+# that the space labels exist. Without this, apps open before yabai started
+# stay where they were.
+yabai -m rule --apply
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Signals — keep sketchybar in sync with yabai
+# ─────────────────────────────────────────────────────────────────────────────
+yabai -m signal --add event=space_changed   action="sketchybar --trigger space_change"
+yabai -m signal --add event=display_changed  action="sketchybar --trigger space_change"
+yabai -m signal --add event=window_focused   action="sketchybar --trigger window_focus"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# JankyBorders — launch with your ~/.config/borders/bordersrc styling
+# ─────────────────────────────────────────────────────────────────────────────
+killall borders &>/dev/null
+"$HOME/.config/borders/bordersrc" &
+
+echo "yabai config loaded."

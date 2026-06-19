@@ -1,41 +1,124 @@
-# alt + lctrl - t : open -n -a 'Kitty'
-# alt + lctrl - t : open -n -a 'Alacritty'
-# alt + lctrl - t : open -a 'iterm2'
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ skhd — hotkeys for yabai                                                  │
+# │ Mirrors the AeroSpace (primary) + Glide keybindings.                      │
+# │ Modifier note: alt = Option (⌥), just like AeroSpace.                     │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+
+# ── Mode declarations ────────────────────────────────────────────────────────
+# `@` = capture every key while the mode is active (nothing passes through).
+:: default
+:: resize  @
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Launchers
+# ─────────────────────────────────────────────────────────────────────────────
+# Open Ghostty                                                  alt + lctrl + t
 alt + lctrl - t : open -a 'Ghostty'
 
-# # Focus window (alt + hjkl)
-# alt - h : yabai -m window --focus west
-# alt - j : yabai -m window --focus south
-# alt - k : yabai -m window --focus north
-# alt - l : yabai -m window --focus east
-#
-# # Swap windows (alt + shift + hjkl)
-# alt + shift - h : yabai -m window --swap west
-# alt + shift - j : yabai -m window --swap south
-# alt + shift - k : yabai -m window --swap north
-# alt + shift - l : yabai -m window --swap east
-#
-# # Move window between monitors (alt + shift + f/g)
-# alt + shift - n : yabai -m window --display west && yabai -m display --focus west
-# alt + shift - p : yabai -m window --display east && yabai -m display --focus east
-#
-# #change focus between external displays (left and right)
-# alt - n: yabai -m display --focus west
-# alt - p: yabai -m display --focus east
-#
-# # Floating window toggles (alt + t)
-# alt - t : yabai -m window --toggle float
-# alt + shift - t : yabai -m window --toggle sticky
-#
-# # Change layout modes (alt + o for different layouts)
-# alt - o : yabai -m space --layout bsp
-# alt + shift - o : yabai -m space --layout stack
-#
-# # Resize windows (alt + r + hjkl)
-# alt + cmd - h : yabai -m window --resize left:-50:0
-# alt + cmd - j : yabai -m window --resize bottom:0:50
-# alt + cmd - k : yabai -m window --resize top:0:-50
-# alt + cmd - l : yabai -m window --resize right:50:0
-#
-# # Balance windows (alt + b)
-# alt - b : yabai -m space --balance
+# ─────────────────────────────────────────────────────────────────────────────
+# Focus windows (alt + h/j/k/l)                       AeroSpace: focus left/...
+# ─────────────────────────────────────────────────────────────────────────────
+alt - h : yabai -m window --focus west
+alt - j : yabai -m window --focus south
+alt - k : yabai -m window --focus north
+alt - l : yabai -m window --focus east
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Move / re-tile window (alt + shift + h/j/k/l)             AeroSpace: move ...
+# Falls back to a nudge when there's no neighbour in that direction.
+# ─────────────────────────────────────────────────────────────────────────────
+alt + shift - h : yabai -m window --warp west  || yabai -m window --move rel:-40:0
+alt + shift - j : yabai -m window --warp south || yabai -m window --move rel:0:40
+alt + shift - k : yabai -m window --warp north || yabai -m window --move rel:0:-40
+alt + shift - l : yabai -m window --warp east  || yabai -m window --move rel:40:0
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Displays / monitors
+#   Resizing lives ONLY in resize mode now (alt + shift + r) so it no longer
+#   collides with monitor focus.
+# ─────────────────────────────────────────────────────────────────────────────
+# Focus monitor west / east                            alt + lctrl + h/l
+alt + lctrl - h : yabai -m display --focus west
+alt + lctrl - l : yabai -m display --focus east
+# Move focused window to monitor west / east (and follow)  shift + alt + lctrl + h/l
+shift + alt + lctrl - h : yabai -m window --display west && yabai -m display --focus west
+shift + alt + lctrl - l : yabai -m window --display east && yabai -m display --focus east
+# Move current space to the next monitor (wraps)       AeroSpace: alt-shift-tab
+alt + shift - 0x30 : yabai -m space --display next || yabai -m space --display first
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Focus space (alt + key)                            AeroSpace: workspace <key>
+# Focus is by LABEL — a key no-ops until its Desktop exists (see README).
+# ─────────────────────────────────────────────────────────────────────────────
+alt - 1 : yabai -m space --focus main
+alt - 2 : yabai -m space --focus two
+alt - 3 : yabai -m space --focus three
+alt - 5 : yabai -m space --focus five
+alt - 6 : yabai -m space --focus six
+alt - 7 : yabai -m space --focus seven
+alt - 8 : yabai -m space --focus eight
+alt - 9 : yabai -m space --focus nine
+alt - i : yabai -m space --focus term
+alt - c : yabai -m space --focus code
+alt - b : yabai -m space --focus web
+alt - d : yabai -m space --focus chat
+alt - g : yabai -m space --focus ai
+alt - o : yabai -m space --focus design
+# Back-and-forth to the last space (alt + tab)         AeroSpace: back-and-forth
+alt - 0x30 : yabai -m space --focus recent
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Move window to space (alt + shift + key)        AeroSpace: move-node-to-wspace
+# Does not follow focus — add `&& yabai -m space --focus <label>` to follow.
+# ─────────────────────────────────────────────────────────────────────────────
+alt + shift - 1 : yabai -m window --space main
+alt + shift - 2 : yabai -m window --space two
+alt + shift - 3 : yabai -m window --space three
+alt + shift - 5 : yabai -m window --space five
+alt + shift - 6 : yabai -m window --space six
+alt + shift - 7 : yabai -m window --space seven
+alt + shift - 8 : yabai -m window --space eight
+alt + shift - 9 : yabai -m window --space nine
+alt + shift - i : yabai -m window --space term
+alt + shift - c : yabai -m window --space code
+alt + shift - b : yabai -m window --space web
+alt + shift - d : yabai -m window --space chat
+alt + shift - g : yabai -m window --space ai
+alt + shift - o : yabai -m window --space design
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Layout (alt + / , alt + ,)                            AeroSpace: tiles/accordion
+# ─────────────────────────────────────────────────────────────────────────────
+alt - 0x2C : yabai -m space --layout bsp     # alt + /   → tiles
+alt - 0x2B : yabai -m space --layout stack   # alt + ,   → stack (accordion-ish)
+alt - 0x2A : yabai -m window --toggle split  # alt + \   → flip split orientation (Glide)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Fullscreen / float
+# ─────────────────────────────────────────────────────────────────────────────
+alt + shift - x     : yabai -m window --toggle zoom-fullscreen   # AeroSpace: fullscreen
+alt - f             : yabai -m window --toggle zoom-fullscreen   # Glide: fullscreen
+alt + shift - space : yabai -m window --toggle float --grid 6:6:1:1:4:4   # float + center
+# Toggle whole space between float and bsp                 Glide/AeroSpace: layout floating
+alt + shift - f : if [ "$(yabai -m query --spaces --space | jq -r '.type')" = "float" ]; then yabai -m space --layout bsp; else yabai -m space --layout float; fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Reload yabai + skhd  (ctrl + alt + r)
+# ─────────────────────────────────────────────────────────────────────────────
+ctrl + alt - r : yabai --restart-service && skhd --reload && osascript -e 'display notification "yabai + skhd reloaded" with title "WM"'
+
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │ RESIZE MODE  (alt + shift + r)            AeroSpace: mode resize          │
+# │ h/l width · j/k height · b balance · -/= width · enter/esc exit          │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+alt + shift - r ; resize
+
+resize < h : yabai -m window --resize right:-60:0 || yabai -m window --resize left:-60:0
+resize < l : yabai -m window --resize right:60:0  || yabai -m window --resize left:60:0
+resize < j : yabai -m window --resize bottom:0:60 || yabai -m window --resize top:0:60
+resize < k : yabai -m window --resize bottom:0:-60 || yabai -m window --resize top:0:-60
+resize < b : yabai -m space --balance
+resize < 0x1B : yabai -m window --resize right:-60:0 || yabai -m window --resize left:-60:0   # -
+resize < 0x18 : yabai -m window --resize right:60:0  || yabai -m window --resize left:60:0    # =
+resize < return ; default
+resize < escape ; default

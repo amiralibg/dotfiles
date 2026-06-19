@@ -5,7 +5,7 @@ COLOR="$CYAN"
 sketchybar --add item battery right \
   --set battery update_freq=60 \
         icon.color="$COLOR" \
-        icon.padding_left=10 \
+        icon.padding_left=4 \
         label.padding_right=10 \
         label.color="$COLOR" \
         background.height=26 \

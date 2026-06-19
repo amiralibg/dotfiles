@@ -5,7 +5,7 @@ COLOR="$YELLOW"
 sketchybar --add item cpu right \
   --set cpu update_freq=3 \
         icon.color="$COLOR" \
-        icon.padding_left=10 \
+        icon.padding_left=4 \
         label.color="$COLOR" \
         label.padding_right=10 \
         background.height=26 \

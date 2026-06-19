@@ -28,22 +28,19 @@ for sid in $(yabai -m query --spaces | jq -r '.[].index'); do
           associated_space=$sid \
           icon="$tag" \
           icon.font="$FONT:Bold:13.0" \
-          icon.padding_left=9 \
-          icon.padding_right=4 \
+          icon.padding_left=0 \
+          icon.padding_right=0 \
           label.font="$APP_FONT:Regular:15.0" \
-          label.padding_left=0 \
-          label.padding_right=9 \
-          label.y_offset=-1 \
+          label.padding_left=8 \
+          label.padding_right=0 \
+          label.y_offset=0 \
           label.drawing=off \
-          background.padding_left=-2 \
-          background.padding_right=-2 \
+          background.padding_left=8 \
+          background.padding_right=12 \
           click_script="yabai -m space --focus $sid" \
           script="$PLUGIN_DIR/space.sh" \
     --subscribe space.$sid space_change mouse.clicked space_windows
 done
-
-sketchybar --add item spacer.2 left \
-  --set spacer.2 background.drawing=off label.drawing=off icon.drawing=off width=4
 
 # Bracket the whole spaces block with a rounded, bordered frame.
 sketchybar --add bracket spaces '/space\..*/' \
@@ -54,12 +51,6 @@ sketchybar --add bracket spaces '/space\..*/' \
         background.height=26 \
         background.drawing=on
 
-# Chevron separator after the spaces block.
-sketchybar --add item separator left \
-  --set separator icon= \
-        icon.font="$FONT:Regular:16.0" \
-        icon.color="$YELLOW" \
-        background.padding_left=24 \
-        background.padding_right=12 \
-        label.drawing=off \
-        associated_display=active
+# Small gap between the spaces block and the front-app pill.
+sketchybar --add item spacer.2 left \
+  --set spacer.2 background.drawing=off label.drawing=off icon.drawing=off width=8

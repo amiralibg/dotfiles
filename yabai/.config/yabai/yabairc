@@ -64,11 +64,11 @@ yabai -m config window_opacity        off
 # ═════════════════════════════════════════════════════════════════════════════
 SPACE_LABELS=(
   main     # Desktop 1   → alt-1   (WireGuard, Happ, Cisco, Telegram)
-  term     # Desktop 2   → alt-i   (Alacritty, Warp, kitty, Ghostty)
-  code     # Desktop 3   → alt-c   (VS Code, Zed, Helium)
-  web      # Desktop 4   → alt-b   (Brave, Zen)
-  chat     # Desktop 5   → alt-d   (Discord, Mattermost)
-  ai       # Desktop 6   → alt-g   (ChatGPT, T3 Code, Claude)
+  chat     # Desktop 2   → alt-d   (Discord, Mattermost)
+  web      # Desktop 3   → alt-b   (Brave, Zen)
+  term     # Desktop 4   → alt-i   (Alacritty, Warp, kitty, Ghostty)
+  ai       # Desktop 5   → alt-g   (ChatGPT, T3 Code, Claude)
+  code     # Desktop 6   → alt-c   (VS Code, Zed, Helium)
   design   # Desktop 7   → alt-o   (Figma)
   two      # Desktop 8   → alt-2
   three    # Desktop 9   → alt-3
@@ -164,5 +164,11 @@ yabai -m signal --add event=application_front_switched action="sketchybar --trig
 # ─────────────────────────────────────────────────────────────────────────────
 killall borders &>/dev/null
 "$HOME/.config/borders/bordersrc" &
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Reload sketchybar (if running) so its space pills rebuild with the labels set
+# above — this is why `yabai --restart-service` now refreshes the bar too.
+# ─────────────────────────────────────────────────────────────────────────────
+pgrep -qx sketchybar && sketchybar --reload >/dev/null 2>&1
 
 echo "yabai config loaded."

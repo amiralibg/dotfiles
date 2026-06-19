@@ -18,4 +18,19 @@ sketchybar --add item clock right \
         background.border_color="$COLOR" \
         background.color="$BAR_COLOR" \
         background.drawing=on \
+        popup.align=right \
+        click_script="sketchybar --set clock popup.drawing=toggle" \
         script="$PLUGIN_DIR/clock.sh"
+
+# Popup rows (click the clock to toggle): full date + uptime.
+sketchybar --add item clock.date popup.clock \
+  --set clock.date icon="󰃭" icon.color="$MAGENTA" \
+        label.color="$WHITE" label.align=left \
+        icon.padding_left=10 label.padding_right=12 width=210 \
+        background.drawing=off
+
+sketchybar --add item clock.uptime popup.clock \
+  --set clock.uptime icon="" icon.color="$CYAN" \
+        label.color="$WHITE" label.align=left \
+        icon.padding_left=10 label.padding_right=12 width=210 \
+        background.drawing=off

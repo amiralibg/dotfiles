@@ -11,8 +11,8 @@ source "$HOME/.config/sketchybar/variables.sh"
 
 # ── Bar + defaults ───────────────────────────────────────────────────────────
 sketchybar --bar height=30 \
-  color="$BAR_COLOR" \
-  shadow="$SHADOW" \
+  color="$TRANSPARENT" \
+  shadow=off \
   position=top \
   sticky=on \
   padding_right=0 \

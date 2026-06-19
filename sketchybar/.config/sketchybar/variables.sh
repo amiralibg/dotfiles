@@ -29,7 +29,7 @@ PLUGIN_DIR="$HOME/.config/sketchybar/plugins"
 
 # ── Geometry ─────────────────────────────────────────────────────────────────
 PADDINGS=3
-CORNER_RADIUS=15
+CORNER_RADIUS=8
 BORDER_WIDTH=2
 SHADOW=on
 

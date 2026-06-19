@@ -19,9 +19,6 @@ space_tag() {
 # Custom event fired by yabai signals whenever the windows on a space change.
 sketchybar --add event space_windows
 
-sketchybar --add item spacer.1 left \
-  --set spacer.1 background.drawing=off label.drawing=off icon.drawing=off width=8
-
 for sid in $(yabai -m query --spaces | jq -r '.[].index'); do
   lbl=$(yabai -m query --spaces --space "$sid" | jq -r '.label')
   tag=$(space_tag "$lbl" "$sid")

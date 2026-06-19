@@ -1,16 +1,30 @@
 #!/usr/bin/env bash
-# Highlights the pill for the currently-focused space.
-source "$HOME/.config/sketchybar/colors.sh"
+
+source "$HOME/.config/sketchybar/variables.sh"
+source "$HOME/.config/sketchybar/icon_map.sh"
 
 sid="${NAME#space.}"
-focused=$(yabai -m query --spaces --space 2>/dev/null | jq -r '.index')
 
+# ── Highlight the focused space (query yabai, don't rely on $SELECTED) ────────
+focused=$(yabai -m query --spaces --space 2>/dev/null | jq -r '.index')
 if [ "$sid" = "$focused" ]; then
-  sketchybar --set "$NAME" \
-    background.color=$MAUVE \
-    icon.color=$BAR_COLOR
+  ICON_COLOR=$RED
 else
-  sketchybar --set "$NAME" \
-    background.color=$ITEM_BG \
-    icon.color=$TEXT
+  ICON_COLOR=$COMMENT
+fi
+
+# ── Build the app-icon strip for this space ──────────────────────────────────
+icons=""
+while read -r app; do
+  [ -z "$app" ] && continue
+  __icon_map "$app"
+  icons+="${icon_result}"
+done < <(yabai -m query --windows --space "$sid" 2>/dev/null | jq -r '.[].app')
+
+if [ -n "$icons" ]; then
+  sketchybar --animate tanh 5 --set "$NAME" \
+    icon.color="$ICON_COLOR" label="$icons" label.drawing=on
+else
+  sketchybar --animate tanh 5 --set "$NAME" \
+    icon.color="$ICON_COLOR" label.drawing=off
 fi

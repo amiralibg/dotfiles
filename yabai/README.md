@@ -14,9 +14,11 @@ dotfiles/
 ├── skhd/.config/skhd/skhdrc                 # all keybindings
 ├── borders/.config/borders/bordersrc        # border colours/width
 └── sketchybar/.config/sketchybar/
-    ├── sketchybarrc                         # bar layout
-    ├── colors.sh                            # palette (matches borders)
-    └── plugins/*.sh                         # space/app/clock/battery/volume/wifi
+    ├── sketchybarrc                         # bar + defaults
+    ├── variables.sh                         # Tokyonight theme + fonts
+    ├── icon_map.sh                          # app name → icon ligature
+    ├── items/*.sh                           # spaces, front_app, spotify, clock, …
+    └── plugins/*.sh                         # event scripts
 ```
 
 `setup.sh` installs all four brew packages (+ Symbols Nerd Font) and symlinks
@@ -165,7 +167,11 @@ echo "$(whoami) ALL=(root) NOPASSWD: sha256:$(shasum -a 256 $(which yabai) | cut
 |---|---|
 | `alt + lctrl + h / l` | Focus monitor west / east |
 | `shift + alt + lctrl + h / l` | **Move focused window to monitor west / east** (and follow) |
-| `alt + shift + tab` | Move current space to next monitor (wraps) |
+| `alt + shift + tab` | Send focused window to next monitor (wraps) |
+
+> Moving a whole *space* to another monitor is broken on macOS 26.x
+> (scripting-addition error), so `alt+shift+tab` moves the focused **window**
+> instead.
 
 ### Resize mode — `alt + shift + r` to enter
 
@@ -211,25 +217,48 @@ Hiddify, qBittorrent, Simulator, System Settings, Archive Utility, Brave PiP.
 
 ## sketchybar
 
-A top bar themed to match your JankyBorders gradient (mauve → peach).
+A **Tokyonight** floating bar (rounded, blurred, shadowed) structured like the
+popular reference config: `variables.sh` (theme) + `items/` (item definitions) +
+`plugins/` (event scripts).
 
-- **Left:**  Apple (→ System Settings) · one pill per Desktop, tagged with its
-  keybind (`1 I C B D G …`), focused pill highlighted · front-app name.
-- **Right:** Wi-Fi · volume · battery · clock.
+- **Left:** a bracketed **spaces** block — one pill per Desktop whose **icon is
+  its keybind tag** (`1 I C B D G …`) and whose **label shows the app icons of
+  the windows on that space** (via sketchybar-app-font); focused pill turns red.
+  Then the **front-app** name pill.
+- **Center (left of notch):** now-playing (Spotify/media), shown only when playing.
+- **Right:** clock · calendar · battery · volume · cpu · Wi-Fi (each a coloured
+  bordered pill).
 
-Implementation notes:
+### Fonts (installed by `setup.sh`)
 
-- yabai reserves space for the bar via `external_bar all:37:0` in `yabairc`, and
-  pings sketchybar on space/window/display changes via `yabai -m signal`.
-- Plugins are plain shell (`plugins/*.sh`); colours live in `colors.sh`.
-- **macOS 26 quirks already handled:** sketchybar runs configs with the system
-  `/bin/bash 3.2` (no associative arrays → we use a `case` statement); and the
-  Wi-Fi SSID is redacted from the CLI, so the Wi-Fi item shows connected/off
-  based on whether the Wi-Fi interface has an IP (not the network name).
-- Icons use **Symbols Nerd Font**. If any icon shows as a box, confirm the font:
-  `brew install font-symbols-only-nerd-font`.
+| Font | Used for |
+|---|---|
+| `MesloLGS Nerd Font` (`font-meslo-lg-nerd-font`) | all text + status icons |
+| `sketchybar-app-font` (`font-sketchybar-app-font`) | app icons inside space pills |
+
+`icon_map.sh` (committed in the repo, from the sketchybar-app-font release) maps
+app names → icon ligatures. If an app shows a generic `:default:` icon, it isn't
+in the map — add a `case` arm, or check the upstream font for the right name.
+
+### How the space → app-icons stay in sync
+
+- `items/spaces.sh` defines a custom event `space_windows` and one `space.N` item
+  per existing yabai Desktop.
+- `yabairc` fires `sketchybar --trigger space_windows` on yabai
+  `window_created/destroyed/focused`, `space_changed`, `application_front_switched`.
+- `plugins/space.sh` then queries yabai for that space's apps and updates the pill.
+- yabai reserves room for the floating bar with `external_bar all:40:0`.
+
+### macOS 26 quirks handled
+
+- sketchybar runs configs with system **bash 3.2** (no associative arrays) → the
+  space-tag map is a `case` statement.
+- The Wi-Fi **SSID is redacted** from CLI tools → the Wi-Fi item shows
+  connected/off from the interface IP, not the network name.
 
 Reload after edits: `sketchybar --reload` (or `brew services restart sketchybar`).
+If any glyph is a box, the font isn't active: `brew install --cask
+font-meslo-lg-nerd-font font-sketchybar-app-font`.
 
 ---
 

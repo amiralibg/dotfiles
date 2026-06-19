@@ -16,7 +16,7 @@ sudo yabai --load-sa
 # external_bar reserves room at the top for sketchybar (height 37).
 # ─────────────────────────────────────────────────────────────────────────────
 yabai -m config layout                bsp
-yabai -m config external_bar          all:37:0
+yabai -m config external_bar          all:40:0
 yabai -m config top_padding           8
 yabai -m config bottom_padding        8
 yabai -m config left_padding          8
@@ -139,9 +139,12 @@ yabai -m rule --apply
 # ─────────────────────────────────────────────────────────────────────────────
 # Signals — keep sketchybar in sync with yabai
 # ─────────────────────────────────────────────────────────────────────────────
-yabai -m signal --add event=space_changed   action="sketchybar --trigger space_change"
-yabai -m signal --add event=display_changed  action="sketchybar --trigger space_change"
-yabai -m signal --add event=window_focused   action="sketchybar --trigger window_focus"
+yabai -m signal --add event=space_changed             action="sketchybar --trigger space_change --trigger space_windows"
+yabai -m signal --add event=display_changed            action="sketchybar --trigger space_change --trigger space_windows"
+yabai -m signal --add event=window_created             action="sketchybar --trigger space_windows"
+yabai -m signal --add event=window_destroyed           action="sketchybar --trigger space_windows"
+yabai -m signal --add event=window_focused             action="sketchybar --trigger space_windows"
+yabai -m signal --add event=application_front_switched action="sketchybar --trigger space_windows"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # JankyBorders — launch with your ~/.config/borders/bordersrc styling

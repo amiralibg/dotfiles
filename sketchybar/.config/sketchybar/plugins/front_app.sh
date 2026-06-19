@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# Shows the name of the frontmost app.
-if [ "$SENDER" = "front_app_switched" ]; then
+
+case "$SENDER" in
+"front_app_switched")
   sketchybar --set "$NAME" label="$INFO"
-fi
+  ;;
+esac

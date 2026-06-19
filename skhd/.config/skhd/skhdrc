@@ -43,8 +43,10 @@ alt + lctrl - l : yabai -m display --focus east
 # Move focused window to monitor west / east (and follow)  shift + alt + lctrl + h/l
 shift + alt + lctrl - h : yabai -m window --display west && yabai -m display --focus west
 shift + alt + lctrl - l : yabai -m window --display east && yabai -m display --focus east
-# Move current space to the next monitor (wraps)       AeroSpace: alt-shift-tab
-alt + shift - 0x30 : yabai -m space --display next || yabai -m space --display first
+# Send focused window to the next monitor and follow it (wraps).   alt+shift+tab
+# NOTE: moving a whole *space* to another display is broken on macOS 26
+# (scripting-addition error), so this moves the window instead.
+alt + shift - 0x30 : { yabai -m window --display next && yabai -m display --focus next ; } || { yabai -m window --display first && yabai -m display --focus first ; }
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Focus space (alt + key)                            AeroSpace: workspace <key>

@@ -74,7 +74,7 @@ fi
 # ── Window manager (yabai + skhd + JankyBorders + sketchybar) ─────────────────
 for pkg in koekeishiya/formulae/yabai koekeishiya/formulae/skhd \
            FelixKratz/formulae/borders FelixKratz/formulae/sketchybar \
-           font-symbols-only-nerd-font; do
+           font-meslo-lg-nerd-font font-sketchybar-app-font; do
   name="${pkg##*/}"
   if ! brew list "$name" &>/dev/null; then
     info "Installing $name via Homebrew..."

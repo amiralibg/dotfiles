@@ -1,122 +1,62 @@
 #!/usr/bin/env bash
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
-# │ sketchybar — top status bar for the yabai setup                          │
-# │ Left: apple · space pills (tagged by keybind) · front app                │
-# │ Right: wifi · volume · battery · clock                                    │
+# │ sketchybar — Tokyonight floating bar for the yabai setup                  │
+# │ Left:  spaces (with app icons) · front app                               │
+# │ Center: now-playing (Spotify/media)                                       │
+# │ Right: clock · calendar · battery · volume · cpu · wifi                   │
 # ╰──────────────────────────────────────────────────────────────────────────╯
 
-CONFIG_DIR="$HOME/.config/sketchybar"
-PLUGIN_DIR="$CONFIG_DIR/plugins"
-source "$CONFIG_DIR/colors.sh"
+source "$HOME/.config/sketchybar/variables.sh"
 
-FONT="SF Pro"
-NERD="Symbols Nerd Font"   # installed via `brew install font-symbols-only-nerd-font`
-
-# ── Bar ──────────────────────────────────────────────────────────────────────
-sketchybar --bar \
-  height=37 \
+# ── Bar + defaults ───────────────────────────────────────────────────────────
+sketchybar --bar height=30 \
+  color="$BAR_COLOR" \
+  shadow="$SHADOW" \
   position=top \
   sticky=on \
-  blur_radius=30 \
-  color=$BAR_COLOR \
-  padding_left=8 \
-  padding_right=8 \
-  corner_radius=0 \
-  y_offset=0 \
-  margin=0
-
-# ── Defaults ─────────────────────────────────────────────────────────────────
-sketchybar --default \
-  updates=when_shown \
-  icon.font="$NERD:Bold:15.0" \
-  icon.color=$TEXT \
-  icon.padding_left=8 \
-  icon.padding_right=4 \
-  label.font="$FONT:Semibold:13.0" \
-  label.color=$TEXT \
-  label.padding_left=4 \
-  label.padding_right=8 \
-  background.color=$ITEM_BG \
-  background.corner_radius=8 \
-  background.height=24 \
-  background.drawing=off \
+  padding_right=0 \
   padding_left=3 \
-  padding_right=3
+  corner_radius="$CORNER_RADIUS" \
+  y_offset=5 \
+  margin=5 \
+  blur_radius=20 \
+  notch_width=200 \
+  --default updates=when_shown \
+  icon.font="$FONT:Bold:13.5" \
+  icon.color="$ICON_COLOR" \
+  icon.padding_left="$PADDINGS" \
+  icon.padding_right="$PADDINGS" \
+  label.font="$FONT:Bold:13.0" \
+  label.color="$LABEL_COLOR" \
+  label.padding_left="$PADDINGS" \
+  label.padding_right="$PADDINGS" \
+  background.padding_right="$PADDINGS" \
+  background.padding_left="$PADDINGS" \
+  popup.background.border_width="$POPUP_BORDER_WIDTH" \
+  popup.background.corner_radius="$POPUP_CORNER_RADIUS" \
+  popup.background.border_color="$POPUP_BORDER_COLOR" \
+  popup.background.color="$POPUP_BACKGROUND_COLOR" \
+  popup.background.shadow.drawing="$SHADOW"
 
-# ── Apple ────────────────────────────────────────────────────────────────────
-sketchybar --add item apple left \
-  --set apple icon="" icon.font="$NERD:Black:16.0" icon.color=$MAUVE \
-        label.drawing=off background.drawing=off \
-        icon.padding_left=6 icon.padding_right=6 \
-        click_script="open -a 'System Settings'"
+# ── Left ─────────────────────────────────────────────────────────────────────
+source "$ITEM_DIR/spaces.sh"
+source "$ITEM_DIR/front_app.sh"
 
-# ── Spaces (one pill per Desktop, tagged by its keybind) ─────────────────────
-# space_tag maps a space label → the key you press for it (alt-<tag>).
-# NOTE: sketchybar runs this with system bash 3.2 (no associative arrays),
-# so we use a case statement, not `declare -A`.
-space_tag() {
-  case "$1" in
-    main) echo "1" ;; term) echo "I" ;; code) echo "C" ;; web) echo "B" ;;
-    chat) echo "D" ;; ai) echo "G" ;; design) echo "O" ;;
-    two) echo "2" ;; three) echo "3" ;; five) echo "5" ;; six) echo "6" ;;
-    seven) echo "7" ;; eight) echo "8" ;; nine) echo "9" ;;
-    *) echo "$2" ;;
-  esac
-}
-for sid in $(yabai -m query --spaces | jq -r '.[].index'); do
-  lbl=$(yabai -m query --spaces --space "$sid" | jq -r '.label')
-  tag=$(space_tag "$lbl" "$sid")
-  sketchybar --add space space.$sid left \
-    --set space.$sid \
-          icon="$tag" \
-          icon.font="$FONT:Bold:13.0" \
-          label.drawing=off \
-          background.drawing=on \
-          background.color=$ITEM_BG \
-          background.corner_radius=8 \
-          background.height=24 \
-          click_script="yabai -m space --focus $sid" \
-          script="$PLUGIN_DIR/space.sh" \
-    --subscribe space.$sid space_change mouse.clicked
-done
+# ── Center (left of notch) ───────────────────────────────────────────────────
+source "$ITEM_DIR/spotify.sh"
 
-# separator
-sketchybar --add item space.sep left \
-  --set space.sep icon="" icon.color=$SURFACE label.drawing=off \
-        background.drawing=off icon.padding_left=6 icon.padding_right=6
-
-# ── Front app ────────────────────────────────────────────────────────────────
-sketchybar --add item front_app left \
-  --set front_app icon.drawing=off \
-        label.font="$FONT:Bold:13.0" label.color=$PEACH \
-        background.drawing=off \
-        script="$PLUGIN_DIR/front_app.sh" \
-  --subscribe front_app front_app_switched
-
-# ── Right side (added right-to-left) ─────────────────────────────────────────
-sketchybar --add item clock right \
-  --set clock update_freq=10 icon="" icon.color=$BLUE \
-        background.drawing=on \
-        script="$PLUGIN_DIR/clock.sh"
-
-sketchybar --add item battery right \
-  --set battery update_freq=120 \
-        background.drawing=on \
-        script="$PLUGIN_DIR/battery.sh" \
-  --subscribe battery system_woke power_source_change
-
-sketchybar --add item volume right \
-  --set volume background.drawing=on \
-        script="$PLUGIN_DIR/volume.sh" \
-  --subscribe volume volume_change
-
-sketchybar --add item wifi right \
-  --set wifi update_freq=30 \
-        background.drawing=on \
-        script="$PLUGIN_DIR/wifi.sh" \
-  --subscribe wifi wifi_change
+# ── Right ────────────────────────────────────────────────────────────────────
+source "$ITEM_DIR/clock.sh"
+source "$ITEM_DIR/calendar.sh"
+source "$ITEM_DIR/battery.sh"
+source "$ITEM_DIR/volume.sh"
+source "$ITEM_DIR/cpu.sh"
+source "$ITEM_DIR/wifi.sh"
 
 # ── Finalize ─────────────────────────────────────────────────────────────────
+sketchybar --hotload true
 sketchybar --update
-echo "sketchybar config loaded."
+sketchybar --trigger space_windows
+
+echo "sketchybar configuration loaded.."

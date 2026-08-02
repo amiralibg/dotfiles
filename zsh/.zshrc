@@ -95,3 +95,6 @@ export PATH="/Users/amiralibg/.gapcode/bin:$PATH"
 
 # Pi
 export PATH="/Users/amiralibg/.local/share/fnm/node-versions/v24.13.1/installation/bin:$PATH"
+
+# opencode
+export PATH=/Users/amiralibg/.opencode/bin:$PATH

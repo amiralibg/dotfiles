@@ -5,21 +5,21 @@ source "$HOME/.config/sketchybar/icon_map.sh"
 
 sid="${NAME#space.}"
 
-# ── Highlight the focused space (query yabai, don't rely on $SELECTED) ────────
-focused=$(yabai -m query --spaces --space 2>/dev/null | jq -r '.index')
+# ── Highlight the focused workspace (ask AeroSpace) ──────────────────────────
+focused=$(aerospace list-workspaces --focused 2>/dev/null)
 if [ "$sid" = "$focused" ]; then
   ICON_COLOR=$RED
 else
   ICON_COLOR=$COMMENT
 fi
 
-# ── Build the app-icon strip for this space ──────────────────────────────────
+# ── Build the app-icon strip for this workspace ──────────────────────────────
 icons=""
 while read -r app; do
   [ -z "$app" ] && continue
   __icon_map "$app"
   icons+="${icon_result}"
-done < <(yabai -m query --windows --space "$sid" 2>/dev/null | jq -r '.[].app')
+done < <(aerospace list-windows --workspace "$sid" --format '%{app-name}' 2>/dev/null)
 
 if [ -n "$icons" ]; then
   sketchybar --animate tanh 5 --set "$NAME" \

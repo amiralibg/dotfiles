@@ -1,10 +1,13 @@
 after-login-command = []
 
 after-startup-command = [
-  'exec-and-forget borders active_color=0xffc098ff inactive_color=0xff494d64 width=5.0'
+  # 'exec-and-forget borders active_color=0xffe66e84 inactive_color=0xff494d64 width=5'
 ]
 
-exec-on-workspace-change = []
+# Refresh sketchybar's workspace pills whenever the focused workspace changes.
+exec-on-workspace-change = ['/bin/bash', '-c',
+  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+]
 
 # Start AeroSpace at login
 start-at-login = false
@@ -19,7 +22,7 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 accordion-padding = 8
 
 # Possible values: tiles|accordion
-default-root-container-layout = 'accordion'
+default-root-container-layout = 'tiles'
 
 # Possible values: horizontal|vertical|auto
 # 'auto' means: wide monitor (anything wider than high) gets horizontal orientation,
@@ -96,36 +99,35 @@ alt-shift-l = 'move right'
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
 alt-1 = 'workspace 1'
 alt-2 = 'workspace 2'
-alt-3 = 'workspace 3'
-alt-5 = 'workspace 5'
-alt-6 = 'workspace 6'
-alt-7 = 'workspace 7'
-alt-8 = 'workspace 8'
-alt-9 = 'workspace 9'
 alt-b = 'workspace B'
 alt-c = 'workspace C'
 alt-g = 'workspace G'
 alt-i = 'workspace I'
 alt-d = 'workspace D'
-alt-o = 'workspace O'
+alt-x = 'workspace X'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 alt-shift-1 = 'move-node-to-workspace 1'
 alt-shift-2 = 'move-node-to-workspace 2'
-alt-shift-3 = 'move-node-to-workspace 3'
-alt-shift-5 = 'move-node-to-workspace 5'
-alt-shift-6 = 'move-node-to-workspace 6'
-alt-shift-7 = 'move-node-to-workspace 7'
-alt-shift-8 = 'move-node-to-workspace 8'
-alt-shift-9 = 'move-node-to-workspace 9'
 alt-shift-b = 'move-node-to-workspace B'
 alt-shift-c = 'move-node-to-workspace C'
 alt-shift-g = 'move-node-to-workspace G'
 alt-shift-i = 'move-node-to-workspace I'
 alt-shift-d = 'move-node-to-workspace D'
-alt-shift-o = 'move-node-to-workspace O'
+alt-shift-x = 'move-node-to-workspace X'
 
-alt-shift-x = 'fullscreen'
+# Toggle focused window float/tiling (yabai's alt+shift+space)
+alt-shift-space = 'layout floating tiling'
+
+# Fullscreen (yabai's alt+f)
+alt-f = 'fullscreen'
+
+# Focus monitor left/right (yabai's alt+lctrl+h/l)
+alt-ctrl-h = 'focus-monitor left'
+alt-ctrl-l = 'focus-monitor right'
+
+# Open Ghostty (yabai's alt+lctrl+t)
+alt-ctrl-t = 'exec-and-forget open -a Ghostty'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
@@ -227,6 +229,10 @@ if.app-id = 'com.mitchellh.ghostty'
 run = "move-node-to-workspace I"
 
 [[on-window-detected]]
+if.app-id = 'com.cmuxterm.app'
+run = "move-node-to-workspace I"
+
+[[on-window-detected]]
 if.app-id = 'com.microsoft.VSCodeInsiders'
 run = "move-node-to-workspace C"
 
@@ -266,7 +272,7 @@ run = "move-node-to-workspace D"
 
 [[on-window-detected]]
 if.app-id = 'com.figma.Desktop'
-run = "move-node-to-workspace O"
+run = "move-node-to-workspace X"
 
 [[on-window-detected]]
 if.app-id = 'com.openai.chat'

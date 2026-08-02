@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # ╭──────────────────────────────────────────────────────────────────────────╮
-# │ sketchybar — Tokyonight floating bar for the yabai setup                  │
+# │ sketchybar — Tokyonight floating bar for the AeroSpace setup              │
 # │ Left:  spaces (with app icons) · front app                               │
 # │ Center: now-playing (Spotify/media)                                       │
 # │ Right: clock · calendar · battery · volume · cpu · wifi                   │
@@ -57,6 +57,6 @@ source "$ITEM_DIR/wifi.sh"
 # ── Finalize ─────────────────────────────────────────────────────────────────
 sketchybar --hotload true
 sketchybar --update
-sketchybar --trigger space_windows
+sketchybar --trigger aerospace_workspace_change
 
 echo "sketchybar configuration loaded.."

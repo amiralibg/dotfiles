@@ -1,32 +1,21 @@
 #!/usr/bin/env bash
 
-# One pill per macOS Desktop (yabai space). The pill's ICON is its keybind tag
-# (1 I C B D G …); its LABEL shows the app icons of the windows on that space
-# (rendered with sketchybar-app-font). Grouped in a bracket with a coloured
-# border, just like the reference design.
+# One pill per AeroSpace workspace. The pill's ICON is the workspace name, which
+# is also its keybind (alt-<name>); its LABEL shows the app icons of the windows
+# in that workspace (rendered with sketchybar-app-font). Grouped in a bracket
+# with a coloured border.
+#
+# AeroSpace uses a single native macOS space, so we do NOT set associated_space
+# (pills are always visible). Workspace names ARE the tags (1 I C B D G O …),
+# so no name→tag lookup is needed.
 
-# tag for a space label → the key you press for it (alt-<tag>)
-space_tag() {
-  case "$1" in
-    main) echo "1" ;; term) echo "I" ;; code) echo "C" ;; web) echo "B" ;;
-    chat) echo "D" ;; ai) echo "G" ;; design) echo "O" ;;
-    two) echo "2" ;; three) echo "3" ;; five) echo "5" ;; six) echo "6" ;;
-    seven) echo "7" ;; eight) echo "8" ;; nine) echo "9" ;;
-    *) echo "$2" ;;
-  esac
-}
+# Fired from aerospace.toml `exec-on-workspace-change` (see config).
+sketchybar --add event aerospace_workspace_change
 
-# Custom event fired by yabai signals whenever the windows on a space change.
-sketchybar --add event space_windows
-
-for sid in $(yabai -m query --spaces | jq -r '.[].index'); do
-  lbl=$(yabai -m query --spaces --space "$sid" | jq -r '.label')
-  tag=$(space_tag "$lbl" "$sid")
-
-  sketchybar --add space space.$sid left \
+for sid in $(aerospace list-workspaces --all); do
+  sketchybar --add item space.$sid left \
     --set space.$sid \
-          associated_space=$sid \
-          icon="$tag" \
+          icon="$sid" \
           icon.font="$FONT:Bold:13.0" \
           icon.padding_left=0 \
           icon.padding_right=0 \
@@ -37,9 +26,10 @@ for sid in $(yabai -m query --spaces | jq -r '.[].index'); do
           label.drawing=off \
           background.padding_left=8 \
           background.padding_right=12 \
-          click_script="yabai -m space --focus $sid" \
+          update_freq=5 \
+          click_script="aerospace workspace $sid" \
           script="$PLUGIN_DIR/space.sh" \
-    --subscribe space.$sid space_change mouse.clicked space_windows
+    --subscribe space.$sid aerospace_workspace_change front_app_switched mouse.clicked
 done
 
 # Bracket the whole spaces block with a rounded, bordered frame.

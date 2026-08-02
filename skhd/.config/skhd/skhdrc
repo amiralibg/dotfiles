@@ -18,10 +18,11 @@ alt + lctrl - t : open -a 'Ghostty'
 # ─────────────────────────────────────────────────────────────────────────────
 # Focus windows (alt + h/j/k/l)                       AeroSpace: focus left/...
 # ─────────────────────────────────────────────────────────────────────────────
-alt - h : yabai -m window --focus west
-alt - j : yabai -m window --focus south
-alt - k : yabai -m window --focus north
-alt - l : yabai -m window --focus east
+# In a stack, windows overlap so directional focus finds nothing → cycle the stack instead.
+alt - h : yabai -m window --focus west  || yabai -m window --focus stack.prev || yabai -m window --focus stack.last
+alt - j : yabai -m window --focus south || yabai -m window --focus stack.next || yabai -m window --focus stack.first
+alt - k : yabai -m window --focus north || yabai -m window --focus stack.prev || yabai -m window --focus stack.last
+alt - l : yabai -m window --focus east  || yabai -m window --focus stack.next || yabai -m window --focus stack.first
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Move / re-tile window (alt + shift + h/j/k/l)             AeroSpace: move ...
@@ -65,7 +66,7 @@ alt - c : yabai -m space --focus code
 alt - b : yabai -m space --focus web
 alt - d : yabai -m space --focus chat
 alt - g : yabai -m space --focus ai
-alt - o : yabai -m space --focus design
+alt - x : yabai -m space --focus design
 # Back-and-forth to the last space (alt + tab)         AeroSpace: back-and-forth
 alt - 0x30 : yabai -m space --focus recent
 
@@ -86,7 +87,7 @@ alt + shift - c : yabai -m window --space code
 alt + shift - b : yabai -m window --space web
 alt + shift - d : yabai -m window --space chat
 alt + shift - g : yabai -m window --space ai
-alt + shift - o : yabai -m window --space design
+alt + shift - x : yabai -m window --space design
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Layout (alt + / , alt + ,)                            AeroSpace: tiles/accordion
@@ -98,7 +99,6 @@ alt - 0x2A : yabai -m window --toggle split  # alt + \   → flip split orientat
 # ─────────────────────────────────────────────────────────────────────────────
 # Fullscreen / float
 # ─────────────────────────────────────────────────────────────────────────────
-alt + shift - x     : yabai -m window --toggle zoom-fullscreen   # AeroSpace: fullscreen
 alt - f             : yabai -m window --toggle zoom-fullscreen   # Glide: fullscreen
 alt + shift - space : yabai -m window --toggle float --grid 6:6:1:1:4:4   # float + center
 # Toggle whole space between float and bsp                 Glide/AeroSpace: layout floating

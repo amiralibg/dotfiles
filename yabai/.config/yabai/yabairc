@@ -112,6 +112,7 @@ yabai -m rule --add app="^Ghostty$"              space=term
 # editors → code
 yabai -m rule --add app="^Code$"                 space=code
 yabai -m rule --add app="^Code - Insiders$"      space=code
+yabai -m rule --add app="^Cursor$"               space=code
 yabai -m rule --add app="^Zed$"                  space=code
 yabai -m rule --add app="^Helium$"               space=code
 
@@ -149,6 +150,11 @@ yabai -m rule --add app="^Brave Browser$" title=".*Picture.in.Picture.*" manage=
 # that the space labels exist. Without this, apps open before yabai started
 # stay where they were.
 yabai -m rule --apply
+
+# Keep floating windows in the same sub-layer as tiled ones (below) so a
+# floating window is NOT permanently on top — normal focus z-ordering wins.
+yabai -m signal --add event=window_created action='yabai -m window $YABAI_WINDOW_ID --sub-layer below'
+yabai -m query --windows | jq -re '.[].id' | xargs -I{} yabai -m window {} --sub-layer below 2>/dev/null
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Signals — keep sketchybar in sync with yabai  (DISABLED: sketchybar is off)

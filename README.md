@@ -10,6 +10,7 @@ My personal dotfiles for macOS, managed with Git and symlinks.
 | `skhd`       | `~/.config/skhd`              | skhd hotkey daemon (yabai keybinds)      |
 | `borders`    | `~/.config/borders`           | JankyBorders — active-window border      |
 | `sketchybar` | `~/.config/sketchybar`        | sketchybar status bar    |
+| `yabai-spaces` | *(menu-bar app)*            | [YabaiSpaces](yabai-spaces/README.md) — Desktop switcher + ⌃⌥Space window search for `yabai` |
 | `aerospace`  | `~/.config/aerospace`         | AeroSpace window manager (kept as a fallback) |
 | `alacritty`  | `~/.config/alacritty`         | Alacritty terminal       |
 | `firefox`    | `~/Library/...`               | Firefox userChrome & Sidebery layout |
@@ -29,6 +30,26 @@ steps, keybindings, naming your Desktops, and theming — lives in
 
 `setup.sh` installs the brew packages (`yabai`, `skhd`, `borders`, `sketchybar`)
 and the required fonts (`font-meslo-lg-nerd-font`, `font-sketchybar-app-font`).
+
+#### YabaiSpaces — the menu-bar companion
+
+**[`yabai-spaces/`](yabai-spaces/README.md)** is a small native macOS menu-bar app
+built to sit on top of the **[`yabai` config in this repo](yabai/.config/yabai/yabairc)** —
+the two are meant to be used together:
+
+- the status item shows the **name of the Desktop you're on** (`main`, `term`,
+  `code`, … — the same names `yabairc` assigns and `skhdrc` binds to `alt-1/i/c/…`),
+- clicking it lists **every Desktop with the apps on it**; click one to focus it,
+- **⌃⌥Space** opens a fuzzy **window switcher across all Desktops**.
+
+Everything it shows comes from `yabai -m query`, so it stays in sync with the
+window manager automatically and needs no extra permissions. It's the lightweight
+alternative to running `sketchybar` just for the spaces widget — which is why
+`yabairc` in this repo ships with the sketchybar signals commented out.
+
+```bash
+cd yabai-spaces && ./build.sh && open build/YabaiSpaces.app
+```
 
 ## How it works
 

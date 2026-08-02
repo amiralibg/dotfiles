@@ -7,12 +7,17 @@ keybindings already in this dotfiles repo.
 - **skhd** — the hotkey daemon that sends commands to yabai
 - **JankyBorders** (`borders`) — coloured active/inactive window borders
 - **sketchybar** — top status bar (spaces, front app, clock, battery, volume, Wi-Fi)
+- **[YabaiSpaces](../yabai-spaces/README.md)** — menu-bar app for this config:
+  current Desktop name, a click-to-focus list of every Desktop, and a ⌃⌥Space
+  fuzzy window switcher. Use it *instead of* sketchybar's spaces block if you
+  want the bar gone (see [below](#yabaispaces--menu-bar-companion)).
 
 ```
 dotfiles/
 ├── yabai/.config/yabai/yabairc              # tiling, gaps, spaces, app rules
 ├── skhd/.config/skhd/skhdrc                 # all keybindings
 ├── borders/.config/borders/bordersrc        # border colours/width
+├── yabai-spaces/main.swift                  # YabaiSpaces menu-bar app (optional)
 └── sketchybar/.config/sketchybar/
     ├── sketchybarrc                         # bar + defaults
     ├── variables.sh                         # Tokyonight theme + fonts
@@ -267,6 +272,42 @@ in the map — add a `case` arm, or check the upstream font for the right name.
   `window_created/destroyed/focused`, `space_changed`, `application_front_switched`.
 - `plugins/space.sh` then queries yabai for that space's apps and updates the pill.
 - yabai reserves room for the floating bar with `external_bar all:40:0`.
+
+> **Heads-up:** the committed `sketchybar/` config is currently wired to
+> **AeroSpace** (`aerospace list-workspaces` + an `aerospace_workspace_change`
+> event), and the sketchybar signal block in `yabairc` is commented out, because
+> this setup uses [YabaiSpaces](#yabaispaces--menu-bar-companion) instead. To go
+> back to the yabai-driven bar described above, re-enable the signals at the
+> bottom of `yabairc` and restore the yabai queries in `items/spaces.sh` /
+> `plugins/space.sh` (see `git log` for those files).
+
+---
+
+## YabaiSpaces — menu-bar companion
+
+**[`yabai-spaces/`](../yabai-spaces/README.md)** is a ~400-line AppKit agent
+(`LSUIElement`, no Dock icon) written for exactly this yabai config. It's the
+"do I really need a whole status bar?" answer:
+
+| | |
+|---|---|
+| **Status item** | the **name** of the Desktop you're on — the same labels `yabairc` assigns (`main`, `term`, `code`, `web`, `chat`, `ai`, `design`) and `skhdrc` binds to `alt-1/i/c/b/d/g/x` |
+| **Click** | a row per Desktop (index pill + the app icons on it), grouped by display — click to `yabai -m space --focus` it |
+| **⌃⌥Space** | a blurred fuzzy **window switcher across every Desktop** — app icon, app name, window title, Desktop badge; ⏎ focuses the window |
+
+It reads everything from `yabai -m query` (no private APIs) and registers the
+hotkey through Carbon `RegisterEventHotKey`, so it needs **no Accessibility
+permission** of its own — it just inherits whatever yabai already has.
+
+```bash
+cd ~/dotfiles/yabai-spaces
+./build.sh                  # → build/YabaiSpaces.app
+open build/YabaiSpaces.app
+```
+
+Add it to **System Settings → General → Login Items** to start it at login. It
+expects yabai at `/opt/homebrew/bin/yabai` — change `yabaiPath` in `main.swift`
+if yours differs. Full notes in **[`yabai-spaces/README.md`](../yabai-spaces/README.md)**.
 
 ### macOS 26 quirks handled
 

@@ -37,8 +37,14 @@ keymap.set("n", "gO", "<Cmd>call append(line('.') - 1, repeat([''], v:count1))<C
 keymap.set("n", "go", "<Cmd>call append(line('.'),     repeat([''], v:count1))<CR>")
 
 -- VSCode-like keymaps
-keymap.set("n", "<C-p>", "<cmd>Telescope find_files<cr>", { desc = "Find files (VSCode style)" })
-keymap.set("n", "<C-S-f>", "<cmd>Telescope live_grep<cr>", { desc = "Find in files (VSCode style)" })
+if vim.g.vscode then
+  local vscode = require("vscode")
+  keymap.set("n", "<C-p>", function() vscode.action("workbench.action.quickOpen") end, { desc = "Find files" })
+  keymap.set("n", "<C-S-f>", function() vscode.action("workbench.action.findInFiles") end, { desc = "Find in files" })
+else
+  keymap.set("n", "<C-p>", "<cmd>Telescope find_files<cr>", { desc = "Find files (VSCode style)" })
+  keymap.set("n", "<C-S-f>", "<cmd>Telescope live_grep<cr>", { desc = "Find in files (VSCode style)" })
+end
 keymap.set("n", "<leader>/", "gcc", { desc = "Toggle comment", remap = true })
 keymap.set("v", "<leader>/", "gc", { desc = "Toggle comment", remap = true })
 

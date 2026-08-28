@@ -69,9 +69,6 @@ if [[ -d "$HOME/.docker/completions" ]]; then
   fpath=("$HOME/.docker/completions" $fpath)
 fi
 
-# Powerlevel10k — NOT used with starship; uncomment if you switch back from starship
-# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
 # syntax-highlighting fallback (new config uses fast-syntax-highlighting via plugins.zsh)
 # source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 

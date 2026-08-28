@@ -46,13 +46,7 @@ git -C "$DOTFILES" submodule update --init --recursive
 mkdir -p "$CONFIG"
 
 # ── Zsh dependencies ────────────────────────────────────────────────────────
-# Powerlevel10k
-if [ ! -d "$HOME/.powerlevel10k" ]; then
-  info "Cloning powerlevel10k..."
-  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$HOME/.powerlevel10k"
-else
-  warn "powerlevel10k already installed — skipping"
-fi
+# (powerlevel10k removed — using starship via zsh/.config/zsh/prompt.zsh)
 
 # zsh-autosuggestions (oh-my-zsh plugin)
 ZSH_AUTOSUGGESTIONS="$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"

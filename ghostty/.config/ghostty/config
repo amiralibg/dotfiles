@@ -10,3 +10,5 @@ window-padding-y = 16
 
 background-opacity = 0.94
 background-blur-radius = 20
+
+desktop-notifications = true

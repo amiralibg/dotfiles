@@ -66,9 +66,5 @@ alias stream='mpv av://v4l2:/dev/video4 --fullscreen --demuxer-lavf-o=input_form
 
 alias zshconfig="nvim \$ZDOTDIR/.zshrc"
 alias cdP="cd ~/Programming"
-alias cdPgw="cd ~/Programming/Git/Web"
 alias cdPg="cd ~/Programming/Git"
-alias cdpl="cd ~/Programming/Locale"
 alias cl="clear"
-# ls is eza in this config; old 'ls -la --color' kept as lsa for compatibility
-alias lsa="ls -la --color"

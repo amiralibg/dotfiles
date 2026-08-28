@@ -94,10 +94,13 @@ link "$DOTFILES/ghostty/.config/ghostty"       "$CONFIG/ghostty"
 link "$DOTFILES/skhd/.config/skhd"            "$CONFIG/skhd"
 link "$DOTFILES/yabai/.config/yabai"           "$CONFIG/yabai"
 link "$DOTFILES/sketchybar/.config/sketchybar" "$CONFIG/sketchybar"
+link "$DOTFILES/zsh/.config/zsh"               "$CONFIG/zsh"
 
 # ── Home directory symlinks ───────────────────────────────────────────────────
 link "$DOTFILES/tmux/.tmux.conf"  "$HOME/.tmux.conf"
-link "$DOTFILES/zsh/.zshrc"       "$HOME/.zshrc"
+link "$DOTFILES/zsh/.zshenv"      "$HOME/.zshenv"
+# zsh: ZDOTDIR mode — ~/.zshenv sets ZDOTDIR=$XDG_CONFIG_HOME/zsh via .zshenv
+# legacy ~/.zshrc symlink removed; ~/.config/zsh/.zshrc is the entry point
 
 echo ""
 info "Done! All symlinks are in place."

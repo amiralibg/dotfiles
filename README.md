@@ -18,7 +18,8 @@ My personal dotfiles for macOS, managed with Git and symlinks.
 | `kitty`      | `~/.config/kitty`             | Kitty terminal           |
 | `nvim`       | `~/.config/nvim`              | Neovim (lazy.nvim)       |
 | `tmux`       | `~/.tmux.conf`                | Tmux                     |
-| `zsh`        | `~/.zshrc`                    | Zsh + oh-my-zsh          |
+| `zsh`        | `~/.config/zsh`, `~/.zshenv`  | Modular Zsh + Starship prompt |
+
 
 ### Window manager stack
 
@@ -116,9 +117,11 @@ ln -sf ~/dotfiles/nvim/.config/nvim ~/.config/nvim
 # Tmux
 ln -sf ~/dotfiles/tmux/.tmux.conf ~/.tmux.conf
 
-# Zsh
-ln -sf ~/dotfiles/zsh/.zshrc ~/.zshrc
+# Zsh (ZDOTDIR mode)
+ln -sf ~/dotfiles/zsh/.config/zsh ~/.config/zsh
+ln -sf ~/dotfiles/zsh/.zshenv ~/.zshenv
 ```
+
 
 ### 4. Verify symlinks
 

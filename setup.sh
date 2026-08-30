@@ -89,6 +89,7 @@ link "$DOTFILES/skhd/.config/skhd"            "$CONFIG/skhd"
 link "$DOTFILES/yabai/.config/yabai"           "$CONFIG/yabai"
 link "$DOTFILES/sketchybar/.config/sketchybar" "$CONFIG/sketchybar"
 link "$DOTFILES/zsh/.config/zsh"               "$CONFIG/zsh"
+link "$DOTFILES/zsh/.config/zsh/starship.toml" "$CONFIG/starship.toml"
 
 # ── Home directory symlinks ───────────────────────────────────────────────────
 link "$DOTFILES/tmux/.tmux.conf"  "$HOME/.tmux.conf"
